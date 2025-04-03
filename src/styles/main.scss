@@ -1,0 +1,240 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+$sidebar-width: 240px;
+$right-panel-width: 300px;
+$mobile-breakpoint: 768px;
+$player-height: 90px;
+
+:root {
+  --primary-color: #000000;
+  --secondary-color: #121212;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --accent-color: #1db954;
+  --gradient-start: rgba(0, 0, 0, 0.9);
+  --gradient-end: rgba(0, 0, 0, 1);
+  --highlight-color: #282828;
+  --card-hover-color: #333;
+  --card-bg: #181818;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', Arial, sans-serif;
+  background-color: var(--primary-color);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  
+  .main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    
+    .sidebar-container {
+      width: $sidebar-width;
+      flex-shrink: 0;
+      transition: width 0.3s ease;
+      background-color: var(--primary-color);
+    }
+    
+    .content-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      
+      .content-area {
+        flex: 1;
+        overflow-y: auto;
+        background: linear-gradient(var(--gradient-start), var(--gradient-end));
+        transition: background 0.3s ease;
+      }
+      
+      .right-panel {
+        width: $right-panel-width;
+        flex-shrink: 0;
+        background-color: var(--primary-color);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        
+        @media (max-width: 1200px) {
+          display: none;
+        }
+      }
+    }
+    
+    @media (max-width: $mobile-breakpoint) {
+      .sidebar-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        z-index: 100;
+        
+        &.show {
+          transform: translateX(0);
+        }
+      }
+    }
+  }
+  
+  // Bottom player - only visible on small screens
+  .player-container {
+    display: none;
+    
+    @media (max-width: 1200px) {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: $player-height;
+      background-color: #181818;
+      border-top: 1px solid #282828;
+      z-index: 50;
+    }
+  }
+}
+
+// Components
+.music-list {
+  .track-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+    margin-bottom: 4px;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    &.playing {
+      background-color: rgba(40, 40, 40, 0.7);
+
+      .track-title {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+    }
+    
+    .track-number {
+      width: 28px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    
+    .track-thumbnail {
+      width: 40px;
+      height: 40px;
+      margin: 0 15px 0 5px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+    
+    .track-info {
+      flex: 1;
+      margin-right: 8px;
+      
+      .track-title {
+        font-size: 16px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 4px;
+      }
+      
+      .track-artist {
+        font-size: 14px;
+        color: var(--text-secondary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    
+    .track-duration {
+      margin-right: 15px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    
+    .track-options {
+      margin-right: 10px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      
+      &:hover {
+        color: var(--text-primary);
+      }
+    }
+
+    &:hover .track-options {
+      opacity: 1;
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+.loading-animation {
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// Responsive
+@media (max-width: $mobile-breakpoint) {
+  .menu-toggle {
+    display: block;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 150;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+  }
+}
