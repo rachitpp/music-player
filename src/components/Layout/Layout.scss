@@ -1,4 +1,4 @@
-@import '../../styles/main.scss';
+@import "../../styles/main.scss";
 
 // Main layout structure
 .app-container {
@@ -9,10 +9,49 @@
   flex-direction: column;
 }
 
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--background-color, #121212);
+    transition: background-color 1.5s ease;
+    z-index: -2;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at center,
+      transparent 0%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: -1;
+    opacity: 0.8;
+  }
+}
+
 .main-content {
   display: flex;
+  flex: 1;
   height: 100%;
-  width: 100%;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 // Sidebar container
@@ -35,15 +74,19 @@
   flex: 1;
   overflow-y: auto;
   position: relative;
-  
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    background: linear-gradient(
+      to bottom,
+      var(--gradient-start) 0%,
+      var(--gradient-end) 100%
+    );
     transition: background 0.5s ease;
     z-index: -1;
   }
@@ -52,12 +95,17 @@
 // Right panel for music player
 .right-panel {
   flex: 0 0 $right-panel-width;
+  height: 100%;
   background-color: var(--primary-color);
   display: flex;
   flex-direction: column;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  
+  overflow: hidden;
+  padding: 12px 0;
+  box-sizing: border-box;
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.2);
+
   @media (max-width: 1200px) {
     display: none; // Hide on smaller screens
   }
@@ -66,6 +114,7 @@
 // Container for content
 .container-fluid {
   padding: 0;
+  padding-top: 8px;
   height: 100%;
   overflow-y: auto;
 }
@@ -79,12 +128,12 @@
   display: none;
   cursor: pointer;
   transition: transform 0.2s ease;
-  
+
   &:hover {
     transform: scale(1.05);
     background-color: rgba(0, 0, 0, 0.9);
   }
-  
+
   @media (max-width: $mobile-breakpoint) {
     display: flex;
     position: fixed;
@@ -100,7 +149,7 @@
   .main-content {
     flex-direction: column;
   }
-  
+
   .sidebar-container {
     flex: 0 0 auto;
     height: auto;

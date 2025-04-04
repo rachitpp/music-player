@@ -1,8 +1,8 @@
 // Main App Component
-import { MusicProvider } from './context/MusicContext'
-import Layout from './components/Layout/Layout'
-import ContentArea from './components/Layout/ContentArea'
-import './styles/main.scss'
+import { MusicProvider } from "./context/MusicContext";
+import Layout from "./components/Layout/Layout";
+import ContentArea from "./components/Layout/ContentArea";
+import "./styles/main.scss";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <ContentArea />
       </Layout>
     </MusicProvider>
-  )
+  );
 }
 
-export default App
+export default App;

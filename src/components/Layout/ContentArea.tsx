@@ -1,36 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { useMusicPlayer } from '../../hooks/useMusicPlayer';
-import MusicList from '../MusicList/MusicList';
-import SearchBar from '../MusicList/SearchBar';
-import { Track } from '../../types';
-import './ContentArea.scss';
+import React, { useState, useEffect } from "react";
+import { useMusicPlayer } from "../../hooks/useMusicPlayer";
+import MusicList from "../MusicList/MusicList";
+import SearchBar from "../MusicList/SearchBar";
+import { Track } from "../../types";
+import "./ContentArea.scss";
 
 const ContentArea: React.FC = () => {
-  const { 
-    activeTab, 
-    filteredTracks, 
-    recentlyPlayed, 
-    favorites
-  } = useMusicPlayer();
-  
+  const { activeTab, filteredTracks, recentlyPlayed, favorites } =
+    useMusicPlayer();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [favoriteTracks, setFavoriteTracks] = useState<Track[]>([]);
+  const [animateContent, setAnimateContent] = useState<boolean>(false);
+  const [previousTab, setPreviousTab] = useState<string>(activeTab);
 
   // Simulate loading
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-  }, [activeTab]);
+    if (previousTab !== activeTab) {
+      // Trigger animation when tab changes
+      setAnimateContent(true);
+      setLoading(true);
+
+      // Set a short delay before displaying new content for smooth transition
+      const timer = setTimeout(() => {
+        setPreviousTab(activeTab);
+        setAnimateContent(false);
+
+        // Add a slight delay for loading animation to simulate content loading
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
+      }, 300);
+
+      return () => clearTimeout(timer);
+    } else {
+      // Initial load
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 800);
+
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab, previousTab]);
 
   // Update favorite tracks when favorites changes
   useEffect(() => {
-    const favs = favorites.map(id => {
-      // Find track in the global list of tracks from the music player context
-      return filteredTracks.find(track => track.id === id);
-    }).filter(Boolean) as Track[];
+    const favs = favorites
+      .map((id) => {
+        // Find track in the global list of tracks from the music player context
+        return filteredTracks.find((track) => track.id === id);
+      })
+      .filter(Boolean) as Track[];
     setFavoriteTracks(favs);
   }, [favorites, filteredTracks]);
 
@@ -38,45 +58,39 @@ const ContentArea: React.FC = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'For You':
+      case "For You":
         return (
           <>
+            <h1 className="page-title">For You</h1>
             <SearchBar />
-            <MusicList 
-              title="For You" 
-              tracks={filteredTracks}
-              loading={loading}
-            />
+            <MusicList title="" tracks={filteredTracks} loading={loading} />
           </>
         );
-      case 'Top Tracks':
+      case "Top Tracks":
         return (
           <>
+            <h1 className="page-title">Top Tracks</h1>
             <SearchBar />
-            <MusicList 
-              title="Top Tracks" 
-              tracks={filteredTracks}
-              loading={loading}
-            />
+            <MusicList title="" tracks={filteredTracks} loading={loading} />
           </>
         );
-      case 'Favourites':
+      case "Favourites":
         return (
           <>
             <h1 className="page-title">Favourites</h1>
-            <MusicList 
-              title="Tracks you love" 
+            <MusicList
+              title="Tracks you love"
               tracks={favoriteTracks}
               loading={loading}
             />
           </>
         );
-      case 'Recently Played':
+      case "Recently Played":
         return (
           <>
             <h1 className="page-title">Recently Played</h1>
-            <MusicList 
-              title="Your listening history" 
+            <MusicList
+              title="Your listening history"
               tracks={recentlyPlayed}
               loading={loading}
             />
@@ -86,9 +100,13 @@ const ContentArea: React.FC = () => {
         return <div>Page not found</div>;
     }
   };
-  
+
   return (
-    <div className="content-area-container">
+    <div
+      className={`content-area-container ${
+        animateContent ? "fade-out" : "fade-in"
+      }`}
+    >
       {renderContent()}
     </div>
   );

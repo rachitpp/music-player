@@ -1,99 +1,201 @@
+@import "../../styles/main.scss";
+
 .music-list-container {
-  margin-bottom: 30px;
-  padding: 0 10px;
-  
+  margin-bottom: 16px;
+  padding: 0 0px;
+  width: 100%;
+  box-sizing: border-box;
+
   h2 {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 24px;
+    color: var(--text-secondary);
     letter-spacing: -0.5px;
+    animation: fadeInUp 0.5s ease-out;
   }
-  
+
   .empty-list {
-    padding: 30px 0;
+    padding: 20px 0;
     text-align: center;
     color: var(--text-secondary);
+    margin-top: 40px;
+    font-size: 16px;
+    opacity: 0.8;
   }
-  
+
   .loading-tracks {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
   }
 
   .music-list {
-    margin-top: 16px;
+    margin-top: 8px;
+    max-width: 410px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
-  
+
   .track-item {
     display: flex;
     align-items: center;
-    padding: 8px 16px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    transition: background-color 0.2s ease;
+    padding: 3px 6px;
+    border-radius: 8px;
+    margin-bottom: 0;
+    transition: all 0.25s ease-out;
     cursor: pointer;
-    
+    height: 60px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    animation: fadeInUp 0.4s ease-out;
+    animation-fill-mode: both;
+
+    @for $i from 1 through 20 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.05}s;
+      }
+    }
+
     &:hover {
       background-color: rgba(255, 255, 255, 0.1);
+      transform: translateX(4px);
     }
-    
+
     &.playing {
-      background-color: rgba(40, 40, 40, 0.7);
+      background-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: scale(1.01);
+
+      .track-title,
+      .track-artist {
+        color: white;
+      }
     }
-    
+
+    .track-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 10px;
+      padding: 0;
+    }
+
+    .track-left {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .track-right {
+      display: flex;
+      align-items: center;
+    }
+
     .track-number {
-      width: 30px;
-      color: var(--text-secondary);
-      font-size: 14px;
-      text-align: center;
+      display: none;
     }
-    
+
     .track-thumbnail {
       width: 40px;
       height: 40px;
-      border-radius: 50%;
+      border-radius: 4px;
       background-size: cover;
       background-position: center;
-      margin-right: 16px;
       flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin: 0;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+      }
+
+      .thumbnail-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        animation: fadeIn 0.2s ease-out;
+
+        .play-icon {
+          font-size: 18px;
+        }
+      }
+
+      &:hover .thumbnail-overlay {
+        opacity: 1;
+      }
     }
-    
+
     .track-info {
       flex-grow: 1;
       min-width: 0;
-      margin-right: 16px;
-      
+      padding-right: 3px;
+      margin: 0;
+
       .track-title {
         color: var(--text-primary);
-        font-size: 14px;
-        margin-bottom: 4px;
+        font-family: "Basier Circle", -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0;
+        margin-bottom: 0px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        transition: color 0.3s ease;
       }
-      
+
       .track-artist {
         color: var(--text-secondary);
-        font-size: 12px;
+        font-family: "Basier Circle", -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        opacity: 0.7;
+        transition: color 0.3s ease, opacity 0.3s ease;
       }
     }
-    
+
     .track-duration {
       color: var(--text-secondary);
       font-size: 14px;
-      margin-right: 16px;
+      margin-right: 6px;
       flex-shrink: 0;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
     }
-    
+
+    &:hover .track-duration {
+      opacity: 1;
+    }
+
     .track-options {
       opacity: 0.7;
       transition: opacity 0.2s ease;
-      
+
       &:hover {
         opacity: 1;
       }
@@ -108,10 +210,10 @@
 .dropdown-menu-dark {
   background-color: #333;
   border-color: #444;
-  
+
   .dropdown-item {
     color: var(--text-primary);
-    
+
     &:hover {
       background-color: #444;
     }
@@ -122,4 +224,52 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loading-tracks {
+  .loading-animation {
+    height: 72px;
+    border-radius: 8px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.03) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
