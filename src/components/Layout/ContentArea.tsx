@@ -61,39 +61,55 @@ const ContentArea: React.FC = () => {
       case "For You":
         return (
           <>
-            <h1 className="page-title">For You</h1>
-            <SearchBar />
-            <MusicList title="" tracks={filteredTracks} loading={loading} />
+            <div className="fixed-content">
+              <h1 className="page-title">For You</h1>
+              <SearchBar />
+            </div>
+            <div className="scrollable-content">
+              <MusicList title="" tracks={filteredTracks} loading={loading} />
+            </div>
           </>
         );
       case "Top Tracks":
         return (
           <>
-            <h1 className="page-title">Top Tracks</h1>
-            <SearchBar />
-            <MusicList title="" tracks={filteredTracks} loading={loading} />
+            <div className="fixed-content">
+              <h1 className="page-title">Top Tracks</h1>
+              <SearchBar />
+            </div>
+            <div className="scrollable-content">
+              <MusicList title="" tracks={filteredTracks} loading={loading} />
+            </div>
           </>
         );
       case "Favourites":
         return (
           <>
-            <h1 className="page-title">Favourites</h1>
-            <MusicList
-              title="Tracks you love"
-              tracks={favoriteTracks}
-              loading={loading}
-            />
+            <div className="fixed-content">
+              <h1 className="page-title">Favourites</h1>
+            </div>
+            <div className="scrollable-content">
+              <MusicList
+                title="Tracks you love"
+                tracks={favoriteTracks}
+                loading={loading}
+              />
+            </div>
           </>
         );
       case "Recently Played":
         return (
           <>
-            <h1 className="page-title">Recently Played</h1>
-            <MusicList
-              title="Your listening history"
-              tracks={recentlyPlayed}
-              loading={loading}
-            />
+            <div className="fixed-content">
+              <h1 className="page-title">Recently Played</h1>
+            </div>
+            <div className="scrollable-content">
+              <MusicList
+                title="Your listening history"
+                tracks={recentlyPlayed}
+                loading={loading}
+              />
+            </div>
           </>
         );
       default:

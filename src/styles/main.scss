@@ -15,11 +15,15 @@
   font-style: normal;
 }
 
+// Responsive breakpoints
 $sidebar-width: 240px;
 $content-width: 450px;
 $right-panel-width: calc(100vw - #{$sidebar-width} - #{$content-width});
 $mobile-breakpoint: 768px;
+$tablet-breakpoint: 1024px;
+$desktop-breakpoint: 1200px;
 $player-height: 90px;
+$mobile-player-height: 60px;
 
 :root {
   --primary-color: #121212;
@@ -27,13 +31,11 @@ $player-height: 90px;
   --text-primary: #ffffff;
   --text-secondary: #b3b3b3;
   --accent-color: #1db954;
-  --gradient-start: rgba(18, 18, 18, 0.8);
-  --gradient-end: rgba(0, 0, 0, 0.9);
+  --sidebar-bg: rgba(18, 18, 18, 0.95);
+  --background-color: #121212;
   --highlight-color: #282828;
   --card-hover-color: #333;
   --card-bg: #181818;
-  --sidebar-bg: rgba(0, 0, 0, 0.95);
-  --background-color: #121212;
   --transition-speed: 1.2s;
 }
 
@@ -57,11 +59,7 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  background: linear-gradient(
-    to bottom,
-    var(--gradient-start),
-    var(--gradient-end)
-  );
+  background-color: var(--sidebar-bg);
   transition: background var(--transition-speed, 1.2s) ease;
 
   .main-content {
@@ -74,8 +72,10 @@ body {
       width: $sidebar-width;
       min-width: $sidebar-width;
       flex-shrink: 0;
-      transition: background-color var(--transition-speed, 1.2s) ease;
-      background-color: var(--sidebar-bg, var(--primary-color));
+      transition: background-color var(--transition-speed, 1.2s) ease,
+        transform 0.3s ease;
+      background-color: var(--sidebar-bg);
+      z-index: 100;
     }
 
     .content-container {
@@ -111,11 +111,24 @@ body {
       .right-panel {
         flex: 1;
         min-width: 0;
-        background-color: transparent;
-        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: var(--sidebar-bg);
 
-        @media (max-width: 1200px) {
+        @media (max-width: $desktop-breakpoint) {
           display: none;
+        }
+      }
+    }
+
+    // Mobile & tablet responsive styles
+    @media (max-width: $desktop-breakpoint) {
+      .content-container {
+        width: 100vw;
+
+        .content-area {
+          width: 100%;
+          min-width: 100%;
+          max-width: 100%;
+          padding-bottom: $mobile-player-height;
         }
       }
     }
@@ -128,10 +141,15 @@ body {
         height: 100%;
         transform: translateX(-100%);
         z-index: 100;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 
         &.show {
           transform: translateX(0);
         }
+      }
+
+      .content-area {
+        padding: 0 15px;
       }
     }
   }
@@ -140,15 +158,15 @@ body {
   .player-container {
     display: none;
 
-    @media (max-width: 1200px) {
+    @media (max-width: $desktop-breakpoint) {
       display: block;
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: $player-height;
-      background-color: #181818;
-      border-top: 1px solid #282828;
+      height: $mobile-player-height;
+      background-color: rgba(24, 24, 24, 0.95);
+      backdrop-filter: blur(10px);
       z-index: 50;
     }
   }
@@ -163,6 +181,10 @@ body {
     border-radius: 4px;
     transition: background 0.2s ease;
     margin-bottom: 4px;
+
+    @media (max-width: $mobile-breakpoint) {
+      padding: 8px 10px;
+    }
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.1);
@@ -192,6 +214,12 @@ body {
       background-size: cover;
       background-position: center;
       flex-shrink: 0;
+
+      @media (max-width: $mobile-breakpoint) {
+        width: 36px;
+        height: 36px;
+        margin: 0 10px 0 2px;
+      }
     }
 
     .track-info {
@@ -205,6 +233,10 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
         margin-bottom: 4px;
+
+        @media (max-width: $mobile-breakpoint) {
+          font-size: 14px;
+        }
       }
 
       .track-artist {
@@ -213,6 +245,10 @@ body {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        @media (max-width: $mobile-breakpoint) {
+          font-size: 12px;
+        }
       }
     }
 
@@ -220,6 +256,11 @@ body {
       margin-right: 15px;
       color: var(--text-secondary);
       font-size: 14px;
+
+      @media (max-width: $mobile-breakpoint) {
+        font-size: 12px;
+        margin-right: 5px;
+      }
     }
 
     .track-options {
@@ -254,48 +295,26 @@ body {
   animation: fadeIn 0.3s ease;
 }
 
-.loading-animation {
-  width: 100%;
-  height: 60px;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.05) 25%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 4px;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-// Responsive
+// Responsive title and search styling
 @media (max-width: $mobile-breakpoint) {
-  .menu-toggle {
-    display: block;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 150;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.9);
-    }
+  .page-title {
+    font-size: 24px !important;
+    margin-bottom: 10px !important;
   }
+
+  .search-bar {
+    max-width: 100% !important;
+  }
+}
+
+// Hide scrollbars completely but allow scrolling
+::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
+import MobilePlayer from "../MusicPlayer/MobilePlayer";
+import MobileSongsList from "../MusicList/MobileSongsList";
 import { Container } from "react-bootstrap";
 import { useMusicPlayer } from "../../hooks/useMusicPlayer";
 import "./Layout.scss";
@@ -11,6 +13,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [songsListVisible, setSongsListVisible] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { currentTrack } = useMusicPlayer();
 
@@ -35,74 +38,36 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     if (currentTrack?.colorScheme) {
       const baseColor = currentTrack.colorScheme;
 
-      // Create more subtle versions of the color for different parts
-      const subtleBase = createSubtleColor(baseColor, 0.8);
-      const subtleGradientStart = createSubtleColor(baseColor, 0.6);
-      const subtleGradientEnd = createSubtleColor(baseColor, 0.2);
-      const subtleSidebar = createSubtleColor(baseColor, 0.9);
+      // Create more subtle versions of the color for all sections
+      const subtleColor = createSubtleColor(baseColor, 0.95);
 
-      // Apply transitions with slight delays for a cascading effect
-      setTimeout(() => {
-        // Apply gradient to the document background (more muted)
-        document.body.style.backgroundColor = subtleBase;
-
-        // Set gradient start and end colors (more subtle)
-        document.documentElement.style.setProperty(
-          "--gradient-start",
-          subtleGradientStart
-        );
-      }, 50);
-
-      setTimeout(() => {
-        document.documentElement.style.setProperty(
-          "--gradient-end",
-          subtleGradientEnd
-        );
-
-        // Apply color to primary elements
-        document.documentElement.style.setProperty(
-          "--primary-color",
-          subtleBase
-        );
-      }, 150);
-
-      setTimeout(() => {
-        // Darken for sidebar
-        document.documentElement.style.setProperty(
-          "--sidebar-bg",
-          subtleSidebar
-        );
-      }, 250);
+      // Apply the same color to all panels for consistency
+      document.body.style.backgroundColor = subtleColor;
+      document.documentElement.style.setProperty("--sidebar-bg", subtleColor);
+      document.documentElement.style.setProperty(
+        "--primary-color",
+        subtleColor
+      );
+      document.documentElement.style.setProperty(
+        "--background-color",
+        subtleColor
+      );
 
       // Set additional animation properties
       document.documentElement.style.setProperty("--transition-speed", "1.2s");
     } else {
       // Reset to defaults with animation
-      setTimeout(() => {
-        document.body.style.backgroundColor = "#000000";
-        document.documentElement.style.setProperty(
-          "--gradient-start",
-          "rgba(18, 18, 18, 0.8)"
-        );
-      }, 50);
-
-      setTimeout(() => {
-        document.documentElement.style.setProperty(
-          "--gradient-end",
-          "rgba(0, 0, 0, 0.9)"
-        );
-        document.documentElement.style.setProperty(
-          "--primary-color",
-          "#000000"
-        );
-      }, 150);
-
-      setTimeout(() => {
-        document.documentElement.style.setProperty(
-          "--sidebar-bg",
-          "rgba(0, 0, 0, 0.95)"
-        );
-      }, 250);
+      const defaultColor = "rgba(18, 18, 18, 0.95)";
+      document.body.style.backgroundColor = defaultColor;
+      document.documentElement.style.setProperty("--sidebar-bg", defaultColor);
+      document.documentElement.style.setProperty(
+        "--primary-color",
+        defaultColor
+      );
+      document.documentElement.style.setProperty(
+        "--background-color",
+        defaultColor
+      );
     }
   }, [currentTrack]);
 
@@ -114,6 +79,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         setSidebarOpen(false);
       } else {
         setSidebarOpen(true);
+        // Close mobile songs list when resizing to desktop
+        if (window.innerWidth > 1200) {
+          setSongsListVisible(false);
+        }
       }
     };
 
@@ -129,11 +98,34 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     setSidebarOpen((prev) => !prev);
   };
 
+  const toggleSongsList = () => {
+    setSongsListVisible((prev) => !prev);
+  };
+
+  // Close sidebar when clicking outside on mobile
+  const handleOverlayClick = () => {
+    if (windowWidth <= 768) {
+      setSidebarOpen(false);
+    }
+  };
+
   return (
-    <div className="app-layout">
+    <div
+      className={`app-layout ${
+        songsListVisible ? "mobile-songs-list-visible" : ""
+      }`}
+    >
+      {/* Overlay for mobile when sidebar is open */}
+      {windowWidth <= 768 && sidebarOpen && (
+        <div
+          className="sidebar-overlay active"
+          onClick={handleOverlayClick}
+        ></div>
+      )}
+
       <div className="main-content">
         {/* Left Panel - Sidebar */}
-        <div className="sidebar-container">
+        <div className={`sidebar-container ${sidebarOpen ? "show" : ""}`}>
           <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
         </div>
 
@@ -141,7 +133,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="content-container">
           {/* Middle Panel - Content Area */}
           <div className="content-area">
-            {windowWidth <= 768 && (
+            {windowWidth <= 768 && !songsListVisible && (
               <div className="menu-toggle" onClick={toggleSidebar}>
                 <svg viewBox="0 0 24 24" width="24" height="24">
                   <path
@@ -161,6 +153,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Songs List Overlay */}
+      <MobileSongsList isVisible={songsListVisible} onClose={toggleSongsList} />
+
+      {/* Mobile Player (only shown on small screens) */}
+      {currentTrack && <MobilePlayer toggleSongsList={toggleSongsList} />}
     </div>
   );
 };

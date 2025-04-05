@@ -58,8 +58,24 @@
 .sidebar-container {
   height: 100%;
   flex: 0 0 $sidebar-width;
-  background-color: var(--primary-color);
+  background-color: var(--sidebar-bg);
   z-index: 10;
+  transition: transform 0.3s ease;
+
+  @media (max-width: $mobile-breakpoint) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: $sidebar-width;
+    height: 100vh;
+    transform: translateX(-100%);
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+
+    &.show {
+      transform: translateX(0);
+    }
+  }
 }
 
 // Content container (middle + right)
@@ -67,6 +83,10 @@
   flex: 1;
   display: flex;
   height: 100%;
+
+  @media (max-width: $desktop-breakpoint) {
+    flex-direction: column;
+  }
 }
 
 // Content area (middle)
@@ -82,13 +102,14 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      to bottom,
-      var(--gradient-start) 0%,
-      var(--gradient-end) 100%
-    );
+    background: var(--sidebar-bg);
     transition: background 0.5s ease;
     z-index: -1;
+  }
+
+  @media (max-width: $desktop-breakpoint) {
+    width: 100%;
+    padding-bottom: $mobile-player-height;
   }
 }
 
@@ -96,17 +117,15 @@
 .right-panel {
   flex: 0 0 $right-panel-width;
   height: 100%;
-  background-color: var(--primary-color);
+  background-color: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
   padding: 12px 0;
   box-sizing: border-box;
-  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.2);
 
-  @media (max-width: 1200px) {
+  @media (max-width: $desktop-breakpoint) {
     display: none; // Hide on smaller screens
   }
 }
@@ -117,6 +136,10 @@
   padding-top: 8px;
   height: 100%;
   overflow-y: auto;
+
+  @media (max-width: $mobile-breakpoint) {
+    padding: 0 12px;
+  }
 }
 
 // Mobile menu toggle
@@ -128,6 +151,11 @@
   display: none;
   cursor: pointer;
   transition: transform 0.2s ease;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 150;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 
   &:hover {
     transform: scale(1.05);
@@ -136,11 +164,24 @@
 
   @media (max-width: $mobile-breakpoint) {
     display: flex;
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    z-index: 10;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Mobile overlay when sidebar is open
+.sidebar-overlay {
+  display: none;
+
+  @media (max-width: $mobile-breakpoint) {
+    &.active {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 90;
+    }
   }
 }
 

@@ -1,3 +1,5 @@
+@import "../../styles/main.scss";
+
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -7,16 +9,49 @@
 
   .sidebar-logo {
     padding: 24px 24px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media (max-width: $mobile-breakpoint) {
+      padding: 20px 20px 10px;
+    }
 
     .spotify-logo {
       width: 133.41px;
       height: 40px;
+
+      @media (max-width: $mobile-breakpoint) {
+        width: 110px;
+        height: 33px;
+      }
+    }
+
+    .close-sidebar {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 8px;
+
+      @media (max-width: $mobile-breakpoint) {
+        display: block;
+      }
+
+      &:hover {
+        color: var(--text-primary);
+      }
     }
   }
 
   .sidebar-nav {
     flex: 1;
     margin-top: 24px;
+
+    @media (max-width: $mobile-breakpoint) {
+      margin-top: 16px;
+    }
 
     ul {
       list-style: none;
@@ -36,6 +71,12 @@
         display: flex;
         align-items: center;
         color: rgba(255, 255, 255, 0.6);
+
+        @media (max-width: $mobile-breakpoint) {
+          padding: 8px 20px;
+          font-size: 18px;
+          line-height: 28px;
+        }
 
         &:hover {
           color: var(--text-primary);
@@ -75,5 +116,10 @@
     font-size: 11px;
     color: rgba(255, 255, 255, 0.4);
     margin-top: auto;
+
+    @media (max-width: $mobile-breakpoint) {
+      padding: 12px 20px;
+      font-size: 10px;
+    }
   }
 }

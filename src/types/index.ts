@@ -23,4 +23,6 @@ export interface MusicContextType {
   filteredTracks: Track[];
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  playNextTrack: () => void;
+  playPreviousTrack: () => void;
 }
