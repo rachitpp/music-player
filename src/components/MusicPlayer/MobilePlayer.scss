@@ -10,7 +10,7 @@
   box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1);
   display: none;
   flex-direction: column;
-  height: $mobile-player-height;
+  height: calc($mobile-player-height + 12px);
 
   @media (max-width: $desktop-breakpoint) {
     display: flex;
@@ -19,19 +19,20 @@
   .mobile-player-content {
     display: flex;
     align-items: center;
-    padding: 10px 16px 8px;
+    padding: 16px 20px 12px;
     flex: 1;
     cursor: pointer;
+    justify-content: space-between;
   }
 
   .mobile-player-thumbnail {
-    width: 54px;
-    height: 54px;
-    border-radius: 6px;
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
-    margin-right: 14px;
+    margin-right: 18px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     position: relative;
   }
@@ -39,21 +40,22 @@
   .mobile-player-info {
     flex: 1;
     min-width: 0;
-    margin-right: 12px;
+    margin-right: 16px;
+    max-width: calc(100% - 200px);
   }
 
   .mobile-player-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     color: var(--text-primary);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   .mobile-player-artist {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
@@ -63,7 +65,7 @@
   .mobile-player-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
   }
 
   .mobile-player-like {
@@ -72,8 +74,8 @@
     color: var(--text-secondary);
     padding: 8px;
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,39 +85,12 @@
     &:hover,
     &:active {
       color: var(--text-primary);
-    }
-  }
-
-  .mobile-menu-button {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    padding: 8px;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-right: 8px;
-    margin-left: 0;
-    position: relative;
-    z-index: 5;
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-    &:hover,
-    &:active {
-      color: var(--text-primary);
-      background-color: rgba(0, 0, 0, 0.7);
     }
   }
 
   .mobile-player-control {
-    width: 42px;
-    height: 42px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     background-color: white;
     color: black;
@@ -125,6 +100,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
     &:active {
       transform: scale(0.92);
@@ -138,8 +114,8 @@
     color: var(--text-secondary);
     padding: 6px;
     border-radius: 50%;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,11 +129,11 @@
   }
 
   .mobile-progress-container {
-    padding: 0 0;
+    padding: 0 0 1px 0;
   }
 
   .mobile-progress-bar {
-    height: 4px;
+    height: 5px;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.15);
     position: relative;
@@ -184,6 +160,13 @@
   color: white;
   animation: fadeIn 0.3s ease-out;
   overflow: hidden;
+
+  // iPad specific adjustment for the entire player
+  @media (min-width: $mobile-breakpoint) and (max-width: $desktop-breakpoint) {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; // Push all content toward bottom
+  }
 
   .back-button {
     position: absolute;
@@ -213,6 +196,15 @@
     &:active {
       transform: scale(0.95);
     }
+
+    // iPad specific styles
+    @media (min-width: $mobile-breakpoint) and (max-width: $desktop-breakpoint) {
+      width: 64px;
+      height: 64px;
+      left: 30px;
+      top: 40px;
+      border-width: 3px;
+    }
   }
 
   .main-content {
@@ -221,8 +213,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    padding: 0 20px 16px;
-    gap: 16px;
+    padding: 0 20px 20px;
+    gap: 10px;
+
+    // iPad specific styles
+    @media (min-width: $mobile-breakpoint) and (max-width: $desktop-breakpoint) {
+      padding-bottom: 35px; // More bottom padding
+      gap: 8px;
+      height: 100%; // Ensure it takes full height
+      justify-content: flex-end; // Everything pushed to bottom
+    }
   }
 
   .album-art-container {
@@ -232,6 +232,7 @@
     width: 100%;
     max-width: 85vh;
     margin: 0 auto;
+    margin-top: auto;
 
     .album-art {
       width: 100%;
@@ -240,6 +241,14 @@
       background-size: cover;
       background-position: center;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    // iPad specific styles
+    @media (min-width: $mobile-breakpoint) and (max-width: $desktop-breakpoint) {
+      max-width: 52vh; // Slightly smaller
+      margin-top: auto; // Push down as much as possible
+      margin-bottom: 12px;
+      flex-grow: 0; // Don't let it grow
     }
   }
 
@@ -265,6 +274,32 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    // iPad specific styles
+    @media (min-width: $mobile-breakpoint) and (max-width: $desktop-breakpoint) {
+      margin-top: 10px;
+
+      .track-title {
+        font-size: 28px;
+        margin-bottom: 8px;
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .track-artist {
+        font-size: 22px;
+        margin-bottom: 12px;
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .like-button {
+        width: 56px;
+        height: 56px;
+      }
     }
 
     .like-button {
@@ -297,6 +332,22 @@
     max-width: 360px;
     margin: 0 auto;
 
+    // iPad specific styles
+    @media (min-width: $mobile-breakpoint) and (max-width: $desktop-breakpoint) {
+      max-width: 480px;
+      margin: 8px auto;
+
+      .progress-time {
+        font-size: 16px;
+        margin-bottom: 6px;
+      }
+
+      .fullscreen-progress-bar {
+        height: 8px;
+        border-radius: 4px;
+      }
+    }
+
     .progress-time {
       display: flex;
       justify-content: space-between;
@@ -328,7 +379,7 @@
     align-items: center;
     padding: 0 24px;
     gap: 28px;
-    margin: 10px 0;
+    margin: 8px 0;
 
     button {
       background: none;
@@ -364,6 +415,21 @@
         }
       }
     }
+
+    // iPad specific styles
+    @media (min-width: $mobile-breakpoint) and (max-width: $desktop-breakpoint) {
+      gap: 32px;
+      margin: 10px 0;
+
+      button {
+        padding: 12px;
+
+        &.play-button {
+          width: 80px;
+          height: 80px;
+        }
+      }
+    }
   }
 
   .player-status {
@@ -385,6 +451,20 @@
       font-size: 16px;
       font-weight: 600;
       margin: 0;
+    }
+
+    // iPad specific styles
+    @media (min-width: $mobile-breakpoint) and (max-width: $desktop-breakpoint) {
+      margin-top: 10px;
+
+      span {
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
     }
   }
 }

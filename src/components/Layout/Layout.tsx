@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
 import MobilePlayer from "../MusicPlayer/MobilePlayer";
-import MobileSongsList from "../MusicList/MobileSongsList";
 import { Container } from "react-bootstrap";
 import { useMusicPlayer } from "../../hooks/useMusicPlayer";
 import "./Layout.scss";
@@ -13,7 +12,6 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [songsListVisible, setSongsListVisible] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { currentTrack } = useMusicPlayer();
 
@@ -79,10 +77,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         setSidebarOpen(false);
       } else {
         setSidebarOpen(true);
-        // Close mobile songs list when resizing to desktop
-        if (window.innerWidth > 1200) {
-          setSongsListVisible(false);
-        }
       }
     };
 
@@ -98,10 +92,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     setSidebarOpen((prev) => !prev);
   };
 
-  const toggleSongsList = () => {
-    setSongsListVisible((prev) => !prev);
-  };
-
   // Close sidebar when clicking outside on mobile
   const handleOverlayClick = () => {
     if (windowWidth <= 768) {
@@ -110,11 +100,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div
-      className={`app-layout ${
-        songsListVisible ? "mobile-songs-list-visible" : ""
-      }`}
-    >
+    <div className="app-layout">
       {/* Overlay for mobile when sidebar is open */}
       {windowWidth <= 768 && sidebarOpen && (
         <div
@@ -133,8 +119,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="content-container">
           {/* Middle Panel - Content Area */}
           <div className="content-area">
-            {windowWidth <= 768 && !songsListVisible && (
-              <div className="menu-toggle" onClick={toggleSidebar}>
+            {windowWidth <= 768 && (
+              <div
+                className="menu-toggle right-aligned"
+                onClick={toggleSidebar}
+              >
                 <svg viewBox="0 0 24 24" width="24" height="24">
                   <path
                     fill="currentColor"
@@ -154,11 +143,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </div>
 
-      {/* Mobile Songs List Overlay */}
-      <MobileSongsList isVisible={songsListVisible} onClose={toggleSongsList} />
-
       {/* Mobile Player (only shown on small screens) */}
-      {currentTrack && <MobilePlayer toggleSongsList={toggleSongsList} />}
+      {currentTrack && <MobilePlayer />}
     </div>
   );
 };

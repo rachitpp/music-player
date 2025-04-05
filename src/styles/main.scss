@@ -23,7 +23,7 @@ $mobile-breakpoint: 768px;
 $tablet-breakpoint: 1024px;
 $desktop-breakpoint: 1200px;
 $player-height: 90px;
-$mobile-player-height: 60px;
+$mobile-player-height: 72px;
 
 :root {
   --primary-color: #121212;
@@ -128,7 +128,7 @@ body {
           width: 100%;
           min-width: 100%;
           max-width: 100%;
-          padding-bottom: $mobile-player-height;
+          padding-bottom: calc($mobile-player-height + 12px);
         }
       }
     }
